@@ -1,0 +1,106 @@
+<div ng-show="inventory.sharedData.activeTab=='Items'" id="Items">
+	<form class="columns" ng-submit="inventory.addItem()">
+		<div class="column">
+			<label class="label">Item Name</label>
+			<p class="control">
+				<angucomplete-alt id="itemsAutocomplete" placeholder="Search Items" selected-object="inventory.itemSelected" local-data="inventory.sharedData.items"
+				 search-fields="_id" title-field="_id" minlength="1" input-class="select" initial-value="procedures.procedure.followup.procedureId"
+				 override-suggestions="true" text-no-results="New Item" auto-match="true" pause="0" required/>
+			</p>
+		</div>
+		<div class="column">
+			<label class="label">Quantity</label>
+			<p class="control">
+				<input class="input" ng-model="inventory.newQuantity" placeholder="Quantity" type="number" min="0" required>
+			</p>
+		</div>
+		<div class="column">
+			<label class="label">Expiration&nbspDate</label>
+			<p class="control">
+				<input class="input" ng-model="inventory.newExpirationDate" placeholder="Optional" type="date" min="0">
+			</p>
+		</div>
+		<div class="column">
+			<p class="control">
+				<button class="button level-item is-primary is-large" ng-class='inventory.addClass'>Add Item</button>
+			</p>
+		</div>
+	</form>
+
+	<div class="columns">
+		<div class="column is-3">
+			<input class="input" ng-model="inventory.filterText" placeholder="Search Items">
+			<aside class="menu">
+				<p class="menu-label">
+					List of Items
+				</p>
+				<ul class="menu-list">
+					<li ng-repeat="item in inventory.sharedData.items | filter:inventory.filterText track by item._id">
+						<a ng-bind="::item._id" ng-class="item._id === inventory.item._id ? 'is-active' : ''" ng-click="inventory.setItem(item)"></a>
+					</li>
+				</ul>
+			</aside>
+		</div>
+		<div class="column is-9 box" ng-show="inventory.item" id="itemPanel">
+			<h3 class="title is-3" ng-bind="inventory.item._id"></h3>
+
+			<form ng-submit="inventory.updateItem()" form-on-change="inventory.formChanged()">
+				<div class="columns">
+					<div class="column">
+						<label class="label">Quantity</label>
+						<p class="control">
+							<input class="input" ng-model="inventory.item.quantity" type="number" min="0" required>
+						</p>
+					</div>
+					<div class="column">
+						<label class="label">Unit</label>
+						<span class="select">
+							<select ng-model="inventory.item.unit">
+								<option></option>
+								<option>ml</option>
+								<option>L</option>
+								<option>mg</option>
+								<option>g</option>
+							</select>
+						</span>
+					</div>
+					<div class="column">
+						<label class="label">Reminder Threshold</label>
+						<p class="control">
+							<input class="input" ng-model="inventory.item.threshold" type="number" min="0">
+						</p>
+					</div>
+				</div>
+				<div class="columns">
+					<div class="column">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Quantity</th>
+									<th>Expiration Date</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="batch in inventory.item.batches track by batch.expirationDate">
+									<td ng-bind="::batch.quantity"></td>
+									<td ng-bind="::(batch.expirationDate | date:'shortDate')"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="column control is-grouped">
+						<p class="control">
+							<button class="button is-primary is-large" ng-class="inventory.updateClass">Update</button>
+						</p>
+						<p class="control">
+							<a class="button is-danger is-large" ng-click="inventory.deleteItem()">Delete</a>
+						</p>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div ng-show="inventory.sharedData.activeTab=='Reminders'" id="Reminders">
+
+</div>

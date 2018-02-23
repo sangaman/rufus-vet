@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+	<title>Rufus</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="css/bulma.css">
+	<link rel="stylesheet" type="text/css" href="css/angucomplete-alt.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.1/croppie.min.css">
+	<link rel="stylesheet" type="text/css" href="css/rufus.css">
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-route.js"></script>
+</head>
+
+<body ng-app="myApp">
+
+	<div ng-controller="statementCtrl as statement" ng-show="statement.sharedData.showPrint" ng-cloak>
+		<div class="invoice-box" id="print-content">
+			<div class="columns is-mobile">
+				<div class="column">
+					<img ng-src="https://storage.googleapis.com/rufus-logos/{{index.sharedData.practice._id}}.png">
+				</div>
+				<div class="column has-text-right">
+					<span ng-bind="index.sharedData.practice.name"></span>an>
+					<br>
+					<span ng-bind="index.sharedData.practice.phone | telFilter"></span>
+					<br>
+					<span ng-bind="index.sharedData.practice.email">
+				</div>
+			</div>
+			<div class="columns">
+				<div class="column has-text-centered">
+					<a class="button noprint is-light is-large" ng-click="statement.dismiss()">Back</a>
+				</div>
+				<div class="column has-text-centered">
+					<span ng-bind="statement.sharedData.client.firstName + ' '" ng-if="statement.sharedData.client.firstName"></span>
+					<span ng-bind="statement.sharedData.client.lastName"></span>
+					<br>
+					<span ng-bind="statement.sharedData.client.mailingStreet ? statement.sharedData.client.mailingStreet : statement.sharedData.client.physicalStreet"></span>
+					<br>
+					<span ng-bind="statement.getCityStateZip()"></span>
+				</div>
+				<div class="column has-text-centered">
+					<a class="button noprint is-primary is-large" ng-click="statement.print()">Print</a>
+				</div>
+			</div>
+			<div ng-if="statement.loaded" ng-repeat="(patientId, patient) in statement.patients">
+				<div class="patient-info">
+					<small>
+						<div class="columns is-mobile">
+							<div class="column is-6">
+								<img src="img/dog.png" ng-if="::patient.patient.species === 'Canine'">
+								<img src="img/cat.png" ng-if="::patient.patient.species === 'Feline'">
+								<h2 class="title is-2 is-inline" ng-bind="::statement.sharedData.getNameFromId(patientId)"></h2>
+							</div>
+							<div class="column">
+								<p class="patient-info-line" ng-bind="::'Breed: ' + patient.patient.breed"></p>
+								<div class="columns is-mobile">
+									<div class="column" ng-bind="::'Sex: ' + (patient.patient.sex | sexFilter)"></div>
+									<div class="column" ng-bind="::'Date of Birth: ' + (patient.patient.dob | date:'shortDate')"></div>
+								</div>
+							</div>
+						</div>
+					</small>
+				</div>
+
+				<table class="table is-fullwidth visit-block" ng-repeat="visit in patient.visits">
+					<thead>
+						<tr>
+							<td>
+								<strong ng-bind="::(visit._id.split('-')[3] | date:'shortDate')"></strong> -
+								<span ng-bind="::'Veterinarian: ' + statement.sharedData.getNameFromId(visit.vetId)"></span>
+							</td>
+							<td colspan="2">
+								<span ng-if="visit.weight" ng-bind="::'Weight: ' + visit.weight + ' lbs'"></span>
+							</td>
+						</tr>
+						<tr>
+							<td>Procedure</td>
+							<td class="has-text-right">Quantity</td>
+							<td class="has-text-right">Price</td>
+						</tr>
+					</thead>
+					<tr ng-repeat="procedure in visit.procedures" class="item">
+						<td ng-bind="procedure.id" width="58.33%"></td>
+						<td ng-bind="procedure.quantity ? procedure.quantity : 1" class="has-text-right" width="25%"></td>
+						<td ng-bind="'$' + procedure.price/100" class="has-text-right"></td>
+					</tr>
+					<tr class="total" ng-if="statement.payment">
+						<td></td>
+						<td class="has-text-right">Subtotal</td>
+						<td class="has-text-right" ng-bind="'$' + visit.total/100"></td>
+					</tr>
+				</table>
+			</div>
+			<div class="columns is-mobile visit-block" ng-if="statement.payment">
+				<div class="column is-7">
+					<strong>Payment Received</strong>
+				</div>
+				<div class="column has-text-right is-3">
+					<strong ng-bind="statement.payment.type"></strong>
+					<strong ng-if="statement.payment.info" ng-bind="'&nbsp#' + statement.payment.info"></strong>
+				</div>
+				<div class="column has-text-right">
+					<strong ng-bind="'$' + statement.payment.amount/100"></strong>
+				</div>
+			</div>
+			<div ng-repeat="(patientId, patient) in statement.patients">
+				<p ng-if="patient.reminders.length">
+					<h4 class="title is-4" ng-bind="::'Reminders for ' + statement.sharedData.getNameFromId(patientId)"></h4>
+					<ul>
+						<li ng-repeat="reminder in patient.reminders">
+							<span ng-bind="::(reminder.id.split('-')[3] | date:'shortDate') + ' - '"></span>
+							<strong ng-bind="::reminder.doc.procedureId"></strong>
+						</li>
+					</ul>
+					<br>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<div ng-controller="indexCtrl as index" ng-show="!index.sharedData.showPrint">
+		<nav class="navbar">
+			<div class="navbar-brand">
+				<a class="navbar-item" href="/">
+					<img ng-if="index.isLoggedIn()" ng-src="https://storage.googleapis.com/rufus-logos/{{index.sharedData.practice._id}}.png"
+					 class="is-paddingless">
+					<img ng-if="!index.isLoggedIn()" src="img/rufuslogo.png">
+				</a>
+
+				<span ng-click="index.toggleMenu()" ng-class="index.isMenuActive ? 'is-active' : ''" class="navbar-burger">
+					<span></span>
+					<span></span>
+					<span></span>
+				</span>
+			</div>
+
+			<div ng-cloak ng-class="index.isMenuActive ? 'is-active' : ''" class="navbar-menu">
+				<div class="navbar-end">
+					<a ng-if="index.sharedData.client._id && index.sharedData.isVet" ng-bind="index.sharedData.client.firstName + ' ' + index.sharedData.client.lastName"
+					 class="navbar-item" ng-click="index.hideMenu();index.sharedData.setClient(index.sharedData.client)" href="#!/client">
+					</a>
+					<a ng-if="index.sharedData.isVet" class="navbar-item" ng-click="index.hideMenu()" href="#!/find">
+						Find Record
+					</a>
+					<a ng-if="index.sharedData.isVet" class="navbar-item" ng-click="index.hideMenu();index.newClient()" href="#!/client">
+						New Client
+					</a>
+					<!--<a ng-if="index.sharedData.isVet" class="navbar-item" ng-click="index.hideMenu();" href="#!/inventory">
+					Inventory
+					</a>-->
+					<a ng-if="index.sharedData.isVet" class="navbar-item" ng-click="index.hideMenu()" href="#!/options">
+						Options
+					</a>
+					<a class="navbar-item" ng-if="index.isLoggedIn()" ng-click="index.hideMenu();index.logout()">
+						Logout
+					</a>
+				</div>
+			</div>
+		</nav>
+
+		<section class="hero is-primary is-bold" ng-cloak>
+			<div class="hero-body">
+				<div class="container left-buffer is-pulled-left">
+					<h1 class="title is-1" ng-bind="index.sharedData.title"></h1>
+				</div>
+			</div>
+			<div class="hero-foot" ng-if="index.sharedData.tabNames">
+				<div class="tabs is-boxed">
+					<ul>
+						<li ng-repeat="tabName in index.sharedData.tabNames" ng-class="index.sharedData.activeTab==tabName ? 'is-active' : ''">
+							<a ng-click="index.tabClick(tabName)" ng-bind="::tabName"></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+		<section class="section" ng-if="index.sharedData.isLoaded" ng-cloak>
+			<ng-view ng-if="index.isLoggedIn()"></ng-view>
+			<form ng-if="!index.isLoggedIn()" ng-submit="index.login()">
+				<div class="columns">
+					<div class="column"></div>
+					<div class="column">
+						<div class="notification is-danger" ng-show="index.loginFailed">
+							Incorrect username/password combination!
+						</div>
+						<label class="label">E-mail</label>
+						<div class="field">
+							<p class="control has-icons-left">
+								<input class="input" ng-model="index.sharedData.username" type="text" required>
+								<span class="icon is-left">
+									<i class="fa fa-envelope"></i>
+								</span>
+							</p>
+						</div>
+						<label class="label">Password</label>
+						<div class="field">
+							<p class="control has-icons-left">
+								<input class="input" ng-model="index.sharedData.password" type="password" required>
+								<span class="icon is-left">
+									<i class="fa fa-lock"></i>
+								</span>
+							</p>
+						</div>
+						<div class="field">
+							<p class="control">
+								<button class="button is-primary is-large" ng-class='index.submitClass'>Login</button>
+							</p>
+						</div>
+					</div>
+					<div class="column"></div>
+				</div>
+			</form>
+		</section>
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-mask/1.8.7/mask.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.1/croppie.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/pouchdb@6.4.3/dist/pouchdb.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/pouchdb@6.4.3/dist/pouchdb.find.min.js"></script>
+	<script src="js/pouchdb.authentication-1.1.2.min.js"></script>
+	<!--<script src="https://cdn.jsdelivr.net/npm/pouchdb-authentication@1.1.2/lib/index.js"></script>-->
+	<script src="js/angucomplete-alt-min.js"></script>
+	<script src="app/rufus.js"></script>
+	<script src="app/index.js"></script>
+	<script src="app/shareddata.js"></script>
+	<script src="app/statement.js"></script>
+	<script src="app/client/client.js"></script>
+	<script src="app/client/patient.js"></script>
+	<script src="app/client/newvisit.js"></script>
+	<script src="app/client/appointments.js"></script>
+	<script src="app/client/reminders.js"></script>
+	<script src="app/client/files.js"></script>
+	<script src="app/client/billing.js"></script>
+	<script src="app/findrecord/findrecord.js"></script>
+	<script src="app/options/options.js"></script>
+	<script src="app/options/procedures.js"></script>
+	<script src="app/options/breeds.js"></script>
+	<script src="app/options/clinic.js"></script>
+	<script src="app/dashboard/dashboard.js"></script>
+	<script src="app/inventory/inventory.js"></script>
+</body>
+
+</html>

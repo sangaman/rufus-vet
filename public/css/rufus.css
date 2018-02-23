@@ -1,0 +1,96 @@
+.bulleted {
+	list-style-type: disc;
+}
+
+.left-buffer {
+	padding-left: 0.9em;
+}
+
+.fit-to-div {
+	height: 100%;
+	padding-bottom: 2em;
+}
+
+#profile-pic {
+	height: 300px;
+	width: 300px;
+}
+
+@media (min-width: 769px) {
+	#upload {
+		position: relative;
+		top: -25px;
+	}
+}
+
+fieldset { 
+    border: none;
+}
+
+
+@page {
+	size: A4;
+    margin: 0.4in, 0.5in; 
+}
+
+@media print {
+	.noprint {
+		display: none !important;
+	}
+
+    #print-content {
+    	width: 7.5in;
+		top: 0in;
+		left: 0in;
+	}
+
+    hr {
+	    display: block;
+	    height: 1px;
+	    background: transparent;
+	    width: 100%;
+	    border: none;
+	    border-top: solid 1px #aaa;
+	}
+}
+
+@media screen {
+    .invoice-box{
+        max-width:800px;
+        margin:auto;
+        padding:30px;
+        border:1px solid #eee;
+        box-shadow:0 0 10px rgba(0, 0, 0, .15);
+        font-size:16px;
+        line-height:24px;
+    }
+}
+    
+table tr.total{
+    font-weight:bold;
+}
+
+.visit-block {
+	padding-bottom: 4px;
+}
+
+.patient-info {
+	margin-bottom: 4px;
+	border-style: solid;
+	border-width: 1px;
+	padding: 4px;
+}
+
+.patient-info-line {
+	padding-bottom: 8px;
+}
+
+table tr.item {
+	font-size: 75%;
+}
+
+@media screen and (min-width: 769px) {
+	#choose-pic {
+		top: -50px;
+	}
+}

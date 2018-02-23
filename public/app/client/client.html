@@ -1,0 +1,751 @@
+<fieldset ng-disabled="client.sharedData.role === 'client'">
+	<div ng-show="client.sharedData.activeTab=='Profile'" id="Profile">
+		<form ng-submit="client.submit()" form-on-change="client.formChanged()">
+			<div class="columns">
+				<div class="column field">
+					<label class="label">Last Name or Company</label>
+					<div class="control">
+						<input class="input" ng-disabled="client.sharedData.client._id" ng-model="client.sharedData.client.lastName" type="text"
+						 placeholder="Last Name or Company" required>
+					</div>
+				</div>
+				<div class="column field">
+					<label class="label">First Name</label>
+					<div class="control">
+						<input class="input" ng-disabled="client.sharedData.client._id" ng-model="client.sharedData.client.firstName" type="text"
+						 placeholder="First Name">
+					</div>
+				</div>
+				<div class="column field">
+					<label class="label">Email</label>
+					<div class="control has-icons-left">
+						<input class="input" ng-model="client.sharedData.client.email" type="email" placeholder="Email">
+						<span class="icon is-left">
+							<i class="fa fa-envelope"></i>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="columns">
+				<div class="column field">
+					<label class="label">Home Phone</label>
+					<div class="control">
+						<input class="input" ui-mask="(999) 999-9999" ng-model="client.sharedData.client.homePhone" type="tel">
+					</div>
+				</div>
+				<div class="column field">
+					<label class="label">Cell Phone</label>
+					<div class="control">
+						<input class="input" ui-mask="(999) 999-9999" ng-model="client.sharedData.client.cellPhone" type="tel">
+					</div>
+				</div>
+				<div class="column field">
+					<label class="label">Work Phone</label>
+					<div class="control">
+						<input class="input" ui-mask="(999) 999-9999" ng-model="client.sharedData.client.workPhone" type="tel">
+					</div>
+				</div>
+			</div>
+			<label class="label">Physical Address</label>
+			<div class="columns">
+				<div class="column is-4 field">
+					<div class="control">
+						<input class="input" ng-model="client.sharedData.client.physicalStreet" type="text" placeholder="Street">
+					</div>
+				</div>
+				<div class="column is-4 field">
+					<div class="control">
+						<input class="input" ng-model="client.sharedData.client.physicalCity" type="text" placeholder="City">
+					</div>
+				</div>
+				<div class="column is-2 field">
+					<div class="control">
+						<input class="input" ng-model="client.sharedData.client.physicalState" type="text" maxlength="2" placeholder="State">
+					</div>
+				</div>
+				<div class="column is-2 field">
+					<div class="control">
+						<input class="input" ng-model="client.sharedData.client.physicalZip" type="text" pattern="\d*" maxlength="5" placeholder="Zip">
+					</div>
+				</div>
+			</div>
+			<label class="label">Mailing Address &nbsp&nbsp
+				<input type="checkbox" ng-model="client.showMailing"> Check if different from Physical
+			</label>
+			<div class="columns" ng-show="client.showMailing">
+				<div class="column is-4 field">
+					<div class="control">
+						<input class="input" ng-model="client.sharedData.client.mailingStreet" type="text" placeholder="Street">
+					</div>
+				</div>
+				<div class="column is-4 field">
+					<div class="control">
+						<input class="input" ng-model="client.sharedData.client.mailingCity" type="text" placeholder="City">
+					</div>
+				</div>
+				<div class="column is-2 field">
+					<div class="control">
+						<input class="input" ng-model="client.sharedData.client.mailingState" type="text" maxlength="2" placeholder="State">
+					</div>
+				</div>
+				<div class="column is-2 field">
+					<div class="control">
+						<input class="input" ng-model="client.sharedData.client.mailingZip" type="text" pattern="\d*" maxlength="5" placeholder="Zip">
+					</div>
+				</div>
+			</div>
+			<label class="label">Notes</label>
+			<div class="columns level">
+				<div class="column is-9 field">
+					<div class="control">
+						<textarea class="textarea" ng-model="client.sharedData.client.notes"></textarea>
+					</div>
+				</div>
+				<div class="column is-3 field">
+					<div class="control level-item is-pulled-left">
+						<button class="button is-primary is-large" ng-bind="client.sharedData.client._id ? 'Update' : 'Submit'" ng-class='client.submitClass'
+						 ng-disabled='client.submitDisabled'></button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<div ng-show="client.sharedData.activeTab=='Patients'" id="Patients">
+		<div ng-controller="patientCtrl as patient" ng-show="client.showPatient">
+			<h2 class="title is-2" ng-bind="patient.patient.name ? patient.patient.name : 'New Patient'"></h2>
+			<form ng-submit="patient.submit()" form-on-change="patient.formChanged()">
+				<div class="columns">
+					<div class="has-text-centered">
+						<div ng-show="!patient.patient.imageKey" id="patient-pic" src="https://placeholdit.imgix.net/~text?txtsize=7&txt=choose+or+upload+a+profile+picture&w=300&h=300&fm=jpg&txttrack=0"></div>
+						<div ng-show="!patient.patient.imageKey" id="choose-pic" class="file is-centered">
+							<label class="file-label">
+								<input class="file-input" type="file" id="pic-input" accept="image/*" />
+								<span class="file-cta">
+									<span class="file-icon">
+										<i class="fa fa-file-image-o"></i>
+									</span>
+									<span class="file-label">
+										Choose an image
+									</span>
+								</span>
+							</label>
+						</div>
+						<figure>
+							<img id="profile-pic" ng-src="https://storage.googleapis.com/rufus-images/{{patient.patient._id }}-{{patient.patient.imageKey}}"
+							 ng-if="patient.patient.imageKey && client.showPatient">
+						</figure>
+						<a ng-show="patient.patient.imageKey" class="button is-light" ng-click="patient.changePic()">
+							Change Picture
+						</a>
+					</div>
+					<div class="column">
+						<div class="columns">
+							<div class="column field">
+								<label class="label">Name</label>
+								<div class="control">
+									<input class="input" ng-disabled="patient.patient._id" ng-model="patient.patient.name" type="text" placeholder="New Patient"
+									 required>
+								</div>
+							</div>
+							<div class="column field">
+								<label class="label">Species</label>
+								<div class="control">
+									<div class="select" ng-if="!patient.patient._id">
+										<select ng-options="k as k for (k, v) in patient.sharedData.species" ng-model="patient.patient.species" required>
+											<option></option>
+										</select>
+									</div>
+									<input ng-if="patient.patient._id" class="input" ng-value="patient.patient.species" disabled>
+								</div>
+							</div>
+							<div class="column field">
+								<label class="label">Breed</label>
+								<div class="control" ng-if="patient.patient.species && !patient.patient._id">
+									<angucomplete-alt id="breedsAutocomplete" placeholder="Search Breeds" pause="250" selected-object="patient.breedSelected"
+									 local-data="patient.sharedData.breeds[patient.patient.species]" search-fields="name" title-field="name" minlength="1"
+									 input-class="select" override-suggestions="true" text-no-results="New Breed" required></angucomplete-alt>
+								</div>
+								<div class="control" ng-if="client.showPatient && (!patient.patient.species || patient.patient._id)">
+									<input class="input" type="text" ng-value="::patient.patient.breed" disabled>
+								</div>
+							</div>
+						</div>
+						<div class="columns">
+							<div class="column field is-4">
+								<label class="label">Sex</label>
+								<div class="control">
+									<div class="select">
+										<select ng-model="patient.patient.sex" ng-change="patient.formChanged()" required>
+											<option></option>
+											<option value="N">Neutered Male</option>
+											<option value="S">Spayed Female</option>
+											<option value="M">Intact Male</option>
+											<option value="F">Intact Female</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="column field is-4">
+								<label class="label">Date of Birth</label>
+								<div class="control">
+									<input class="input" ng-model="patient.patient.dob" type="date" required>
+								</div>
+							</div>
+							<div class="column field is-4">
+								<label class="label">Color</label>
+								<div class="control">
+									<input class="input" ng-model="patient.patient.color" type="text" placeholder="Color">
+								</div>
+							</div>
+						</div>
+						<label class="label">Notes</label>
+						<p class="control">
+							<textarea class="textarea" ng-model="patient.patient.notes"></textarea>
+						</p>
+					</div>
+				</div>
+				<div class="columns is-mobile">
+					<div class="column field">
+						<div class="control">
+							<a class="button is-light is-large is-overlay" ng-click="client.patientBack(patient.showNewVisit)">
+								<span class="icon">
+									<i class="fa fa-arrow-left"></i>
+								</span>
+								<span>Back</span>
+							</a>
+						</div>
+					</div>
+					<div class="column field">
+						<div class="control">
+							<label class="checkbox">
+								<input type="checkbox" ng-model="patient.patient.deceased" ng-change="patient.formChanged()"> Deceased
+							</label>
+						</div>
+					</div>
+					<div class="column field">
+						<div class="control is-pulled-right">
+							<button class="button is-primary is-large" ng-class='patient.submitClass' ng-disabled="patient.submitDisabled" ng-bind="patient.patient._id ? 'Update' : 'Submit'"></button>
+						</div>
+					</div>
+				</div>
+			</form>
+			<br>
+			<div class="tabs is-fullwidth is-toggle is-large" ng-show="patient.patient._id" class="section">
+				<ul>
+					<li ng-repeat="tabName in patient.tabNames" ng-class="patient.activeTab==tabName ? 'is-active' : ''">
+						<a ng-click="patient.tabClick(tabName)" ng-bind="::tabName"></a>
+					</li>
+				</ul>
+			</div>
+			<div id="History" ng-show="patient.activeTab=='History'">
+				<a class="button is-large is-primary" ng-show="patient.patient._id && !patient.showNewVisit" ng-click="patient.startNewVisit()"
+				 ng-disabled="client.sharedData.role === 'client'">
+					<span class="icon is-large">
+						<i class="fa fa-plus"></i>
+					</span>
+					<span>Add Visit</span>
+				</a>
+				<a class="button is-large is-primary" ng-show="patient.patient._id && !patient.showNewVisit && patient.sharedData.patientVisits.length > 0"
+				 ng-click="patient.showRecords()">
+					<span class="icon is-large">
+						<i class="fa fa-stethoscope"></i>
+					</span>
+					<span>Show Records</span>
+				</a>
+				<br>
+				<div ng-controller="newVisitCtrl as newVisit" ng-if="patient.showNewVisit">
+					<a class="button is-info is-fullwidth" ng-bind="(patient.newVisitDate | date:'shortDate') + ' - ' + patient.sharedData.getNameFromId(newVisit.visit.vetId)"></a>
+					<form class="box" ng-submit="patient.addVisit(newVisit.visit)">
+						<div class="columns is-desktop">
+							<div class="column">
+								<div class="columns">
+									<div class="column field">
+										<label class="label">Date</label>
+										<div class="control">
+											<input class="input" ng-model="patient.newVisitDate" type="date" required>
+										</div>
+									</div>
+									<div class="column field">
+										<label class="label">Veterinarian</label>
+										<div class="control">
+											<span class="select">
+												<select ng-model="newVisit.visit.vetId" ng-options="v as patient.sharedData.getNameFromId(v) for v in patient.sharedData.vetIds"
+												 required>
+													<option></option>
+												</select>
+											</span>
+										</div>
+									</div>
+									<div class="column field">
+										<label class="label">Body&nbspCondition&nbsp(0&#8209;9)</label>
+										<div class="control">
+											<input class="input" ng-model="newVisit.visit.bodyCondition" type="number" placeholder="Body Condition" min="0" max="9" step="0.5">
+										</div>
+									</div>
+								</div>
+								<div class="columns">
+									<div class="column field">
+										<label class="label">Weight (lbs)</label>
+										<div class="control">
+											<input class="input" ng-model="newVisit.visit.weight" type="number" placeholder="Weight" min="0" step="0.1">
+										</div>
+									</div>
+									<div class="column field">
+										<label class="label">Respiratory Rate (br-min)</label>
+										<div class="control">
+											<input class="input" ng-model="newVisit.visit.rr" type="number" placeholder="Respiratory Rate" min="0">
+										</div>
+									</div>
+								</div>
+								<div class="columns">
+									<div class="column field">
+										<label class="label">Pulse (bpm)</label>
+										<div class="control">
+											<input class="input" ng-model="newVisit.visit.pulse" type="number" placeholder="Pulse" min="0">
+										</div>
+									</div>
+									<div class="column field">
+										<label class="label">Temperature (°F)</label>
+										<div class="control">
+											<input class="input" ng-model="newVisit.visit.temp" type="number" placeholder="Temperature" min="0" step="0.1">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="column field">
+								<label class="label">Note</label>
+								<div class="control fit-to-div">
+									<textarea class="textarea fit-to-div" ng-model="newVisit.visit.notes[0].note">
+					  </textarea>
+								</div>
+							</div>
+						</div>
+						<div class="box columns">
+							<div class="column is-8">
+								<div class="columns">
+									<div class="column field is-horizontal">
+										<div class="field-label is-normal">
+											<label class="label">Procedure</label>
+										</div>
+										<div class="field-body">
+											<div class="field">
+												<div class="control">
+													<angucomplete-alt id="proceduresAutocomplete" placeholder="Search Procedures" pause="250" selected-object="newVisit.procedureSelected"
+													 local-data="patient.sharedData.procedures" search-fields="_id" title-field="_id" minlength="1" input-class="select"></angucomplete-alt>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="column field is-horizontal">
+										<div class="field-label is-normal">
+											<label class="label">Price&nbsp($)</label>
+										</div>
+										<div class="field-body">
+											<div class="field">
+												<div class="control">
+													<input class="input" ng-value="newVisit.price" placeholder="Price" disabled>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="columns">
+									<div class="column field is-horizontal">
+										<div class="field-label is-normal">
+											<label class="label">Quantity</label>
+										</div>
+										<div class="field-body">
+											<div class="field">
+												<div class="control">
+													<input class="input" ng-model="newVisit.quantity" placeholder="Optional Qty" type="number" min="1">
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="column field has-addons">
+										<div class="control">
+											<span class="select">
+												<select ng-model="newVisit.discountType">
+													<option value=""></option>
+													<option value="$">$</option>
+													<option value="%">%</option>
+												</select>
+											</span>
+										</div>
+										<div class="control">
+											<input ng-model="newVisit.discount" class="input" type="number" placeholder="Optional Discount" min="0" step="0.01">
+										</div>
+									</div>
+								</div>
+								<div class="columns">
+									<div class="column field is-horizontal">
+										<div class="field-label is-normal">
+											<label class="label">Total&nbspCost&nbsp($)</label>
+										</div>
+										<div class="field-body">
+											<div class="field">
+												<div class="control">
+													<input class="input" ng-value="newVisit.visit.balance/100" placeholder="0" disabled>
+								  </div>
+								</div>
+							  </div>
+							</div>
+							<div class="column field">
+								<div class="control">
+									<button class="button is-info" ng-disabled="!newVisit.newProcedure" ng-click="newVisit.addProcedure()">Add Procedure</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="column tags">
+						<!--<table class="table is-bordered">
+							<thead>
+							<tr>
+							<th>Item</th>
+							<th>Quantity Used</th>
+							</tr>
+							</thead>
+							<tr ng-repeat="(key, value) in newVisit.visit.items">
+							<td ng-bind="value.unit ? key + ' (' + value.unit + ')' : key"></td>
+							<td><input type="text" class="input" ng-model="newVisit.visit.items[key].quantity"></td>
+							</tr>
+						</table>-->
+						<span class="tag is-light is-large" ng-repeat="procedure in newVisit.visit.procedures">
+							{{::procedure.id}}&nbsp|&nbsp${{::procedure.price/100}}{{::procedure.quantity ? '&nbspx&nbsp' + procedure.quantity:''}}
+						 	<a ng-click="newVisit.deleteProcedure(procedure)" class="delete is-small"></a>
+						</span>				
+					</div>
+				</div>
+				<div class="field is-grouped">
+					<p class="control">
+						<a class="button is-large is-light" ng-click="patient.cancelNewVisit()">
+							Cancel
+						</a>
+					</p>
+					<p class="control">
+					  <button class="button is-primary is-large" ng-class='patient.visitSubmitClass'>Finalize</button>
+					</p>
+				</div>
+				</form>
+			</div>
+			<div ng-repeat="visit in patient.sharedData.patientVisits | orderBy: 'date':true track by visit._id" ng-init="expand=false">
+				<a class="button is-fullwidth" ng-class-odd=" 'is-info'" ng-class-even=" 'is-primary'" ng-click="expand=!expand
+													" ng-bind="::(visit._id.split( '-')[3] | date: 'shortDate') + ' - ' + patient.sharedData.getNameFromId(visit.vetId)"></a>
+				<div ng-if="expand" ng-class="expand ? 'box' : ''">
+					<div class="columns">
+						<div class="column is-6">
+						<div class="columns">
+							<div class="column">
+								<strong>Body Condition:&nbsp</strong>
+								<span ng-bind="::visit.bodyCondition"></span>
+							</div>
+							<div class="column">
+								<strong>Weight (lbs):&nbsp</strong>
+								<span ng-bind="::visit.weight"></span>
+							</div>
+							<div class="column">
+								<strong>Pulse (bpm):&nbsp</strong>
+								<span ng-bind="::visit.pulse"></span>
+							</div>
+						</div>
+						<div class="columns">
+							<div class="column">
+								<strong>Respiratory Rate (br-min):&nbsp</strong>
+								<span ng-bind="::visit.rr"></span>
+							</div>
+							<div class="column">
+								<strong>Temperature (°F):&nbsp</strong>
+								<span ng-bind="::visit.temp"></span>
+							</div>
+						</div>
+						<div class="tags">
+							<span class="tag is-light is-large" ng-repeat="procedure in visit.procedures">
+								<span ng-bind="::procedure.id"></span>
+							</span>	
+						</div>
+						</div>
+						<div class="column is-6">
+							<label class="label">Notes:&nbsp</label>
+							<ul class="bulleted">
+								<li ng-repeat="note in visit.notes | orderBy: 'date':true">
+									<strong ng-bind="::(note.date | date: 'shortDate')"></strong>&nbsp-&nbsp
+									<span ng-bind="::note.note"></span>
+								</li>	
+							</ul>
+							<p class="control">
+								  <textarea class="textarea" ng-model="visit.newNote">
+								  </textarea>
+							</p>
+							<p class="control">
+								<a class="button is-info" ng-click="patient.addNote(visit)">Add Note</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="Files" ng-if="::patient.activeTab=='Files' || undefined" ng-show="patient.activeTab=='Files'
+													" ng-controller="filesCtrl as files">
+			<div class="columns">
+				<div class="column is-4">
+					<form ng-submit="files.submit()">
+						<div class="file has-name is-fullwidth">
+							<label class="file-label">
+								<input class="file-input" type="file" id="file-input" accept="image/*|.pdf|.doc|.docx|.xls|.xlsx|.odt|.ods" required/>
+								<span class="file-cta">
+							      <span class="file-icon">
+							        <i class="fa fa-upload"></i>
+							      </span>
+							      <span class="file-label">
+							        Choose a file
+							      </span>
+							    </span>
+							    <span class="file-name" ng-bind="files.inputFile.name"></span>
+							</label>
+						</div>
+						<div class="field">
+						  <label class="label">Document Name</label>
+						  <div class="control">
+						    <input class="input" type="text" placeholder="Document Name" ng-model="files.file.name" required>
+						  </div>
+						</div>
+						<div class="field">
+						  <label class="label">Description</label>
+						  <div class="control">
+						    <textarea class="textarea fit-to-div" ng-model="files.file.description"></textarea>
+						  </div>
+						</div>
+						<img id="preview"/>
+						<div class="field is-grouped">
+  							<div class="control">
+								<button class="button is-primary is-large is-centered" ng-class='files.submitClass'>Upload</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="column is-8">
+					<table class="table is-fullwidth">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Document</th>
+								<th>Date</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="file in files.files | orderBy: 'date':true">
+								<td><span class="icon">
+								  <i class="fa" ng-class=" 'fa-'+files.keyToIcon(file._id)"></i>
+								</span></td>
+								<td><a ng-href="https://storage.googleapis.com/rufus-files/{{file._id}}" ng-bind="::file.name" target="_blank"></a></td>
+								<td ng-bind="::files.keyToDate(file._id) | date: 'shortDate'"></td>
+								<td ng-bind="::file.description"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div id="PatientReminders" ng-if="::patient.activeTab=='Reminders' || undefined" ng-show="patient.activeTab=='Reminders'">
+			<reminders fixed-patient-id="patient.patient._id.substring(2)"></reminders>
+		</div>
+	</div>
+	<div ng-if="!client.showPatient">
+		<a ng-click="client.addPatient()" class="button is-large is-primary" ng-disabled="client.sharedData.role==='client'">Add Patient</a>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Species</th>
+					<th>Breed</th>
+					<th>Sex</th>
+					<th>Age</th>
+					<th>Color</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="patient in client.sharedData.patients track by patient._id">
+					<td><a ng-click="client.patientClick(patient)" ng-bind="::patient.name"></a><span ng-if="patient.deceased"> (Deceased)</span></td>
+					<td ng-bind="::patient.species"></td>
+					<td ng-bind="::patient.breed"></td>
+					<td ng-bind="::(patient.sex | sexFilter)"></td>
+					<td ng-bind="::(patient.dob | ageFilter)"></td>
+					<td ng-bind="::patient.color"></td>
+				</tr>
+			</tbody>
+		</table>	
+	</div>
+</div>
+
+<div ng-if="::client.sharedData.activeTab=='Billing' || undefined" ng-show="client.sharedData.activeTab=='Billing'
+													" ng-controller="billingCtrl as billing" id="Billing">
+	<form class="columns level" ng-submit="billing.addPayment()">
+		<div class="column">
+			<label class="label">Balance&nbsp($)</label>
+			<p class="control">
+			  <input class="input" ng-value="billing.balance/100" disabled>
+			</p>
+		</div>
+		<div class="column">
+			<label class="label">Payment&nbspType</label>
+			<p class="control">
+			  <select class="select" ng-change="billing.paymentTypeChanged()" ng-model="billing.payment.type" required>
+				  <option></option>
+				  <option>Cash</option>
+				  <option>Check</option>
+				  <option>Credit Card</option>
+				  <option>CareCredit</option>
+			  </select>
+			</p>
+		</div>
+		<div class="column">
+			<div ng-if="billing.paymentInfoLabel">
+			<label class="label" ng-bind="billing.paymentInfoLabel"></label>
+			<p class="control">
+			  <input class="input" ng-model="billing.payment.info">
+			</p>
+			</div>
+		</div>
+		<div class="column">
+			<label class="label">Amount&nbsp($)</label>
+			<p class="control">
+			  <input class="input" ng-model="billing.amount" type="number" min="0" step="0.01" max="{{billing.balance/100}}" required>
+			</p>
+		</div>
+		<div class="column">
+			<p class="control">
+			  <button class="button level-item is-primary is-large" ng-class="billing.submitClass" ng-disabled="client.sharedData.role==='client'">Add Payment</button>
+			</p>
+		</div>
+	</form>
+	<div class="tile is-parent">
+		<div class="box tile is-child">
+			<div class="level">
+				<h3 class="title is-3 level-left">Unpaid Visits</h3>
+				<!--ng-disabled="client.sharedData.role==='client'"-->
+				<a class="button is-info level-right" disabled>Show Invoice</a>
+			</div>
+			<ul>
+				<li ng-repeat="visit in billing.sharedData.unpaidVisits track by visit._id" ng-init="expand=false">
+					<a ng-click="expand=!expand" class="icon">
+					<i class="fa" ng-class="expand ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+					</a>
+					<strong ng-bind="::(visit._id.split( '-')[3] | date: 'shortDate')"></strong> - <span ng-bind="::billing.sharedData.getNameFromId(visit._id)
+													 + ' - $' + visit.balance/100"></span>
+					<div ng-if="::expand || undefined" ng-show="expand">
+						<div class="columns">
+							<div class="column is-1"></div>
+							<div class="column">
+								<ul class="bulleted">
+									<li ng-repeat="procedure in visit.procedures">
+										{{procedure.id}}&nbsp-&nbsp${{procedure.price/100}}{{::procedure.quantity ? '&nbspx&nbsp' + procedure.quantity:''}}
+									</li>
+									<li ng-show="visit.balance<visit.total">
+										Payment&nbsp-&nbsp$<span ng-bind="(visit.total-visit.balance)/100"></span>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</li>	
+			</ul>
+		</div>
+		<div class="box tile is-child">
+			<form>
+			<div class="level">
+				<h3 class="title is-3 level-left">Payment History</h3>
+				<a class="button is-info level-right" ng-click="billing.showReceipt()" ng-disabled="client.sharedData.role==='client'">Show Receipt</a>
+			</div>
+			<div>
+				<ul class="control">
+					<li ng-repeat="payment in billing.payments track by payment._id">
+						<label class="radio">
+							<input type="radio" ng-model="billing.selectedPayment" name="receipt" ng-value="::payment">
+							<strong ng-bind="::(payment._id.split( '-')[1] | date: 'shortDate')"></strong>&nbsp-&nbsp$<span ng-bind="::payment.amount/100
+													"></span>&nbsp-&nbsp<span ng-bind="::payment.type"></span><span ng-if="payment.info" ng-bind=" '&nbsp#' + payment.info"></span>
+						</label>
+					</li>
+				</ul>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div ng-if="::client.sharedData.activeTab=='Appointments' || undefined" ng-show="client.sharedData.activeTab=='Appointments'
+													" ng-controller="appointmentsCtrl as appointments" id="Appointments">
+	<div class="columns">
+		<div class="column">
+			<h3 class="title is-3">Upcoming Appointments</h3>
+			<div ng-repeat="appointment in appointments.appointments track by appointment._id">
+			<div class="message" ng-if="!appointment.canceled">
+			  <div class="message-header">
+			    <p ng-switch="!!appointment.htmlLink">
+			    	<span ng-bind="::(appointment.start | date: 'short') + ' - ' + appointments.sharedData.getNameFromId(appointment.vetId)
+													 + ' - '"></span>
+			    	<span ng-switch-when="false" ng-bind="appointment.title"></span>
+			    	<a ng-switch-default ng-href="{{::appointment.htmlLink}}" target="_blank" ng-bind="appointment.title"></a>
+			    </p>
+			    <button ng-click="appointments.deleteAppointment(appointment)" class="delete"></button>
+			  </div>
+			  <div ng-bind="::appointment.note" class="message-body"> </div>
+			</div>
+			</div>
+		</div>
+		<div class="column">
+			<h3 class="title is-3">New Appointment</h3>
+			<form ng-submit="appointments.addAppointment()">
+				<div class="columns">
+					<div class="column field">
+						<label class="label">Start</label>
+						<div class="control">
+						  <input class="input" type="datetime-local" ng-blur="appointments.onStartBlur()" ng-model="appointments.appointment.start" required>
+						</div>
+					</div>
+					<div class="column field">
+						<label class="label">End</label>
+						<div class="control">
+						  <input class="input" type="datetime-local" ng-model="appointments.appointment.end" required>
+						</div>
+					</div>
+				</div>
+				<div class="columns">
+					<div class="column field">
+						<label class="label">Title</label>
+						<div class="control">
+						  <input class="input" type="text" ng-model="appointments.appointment.title" required>
+						</div>
+					</div>
+					<div class="column field">
+						<label class="label">Veterinarian</label>
+						<div class="control">
+						    <span class="select">
+							<select ng-model="appointments.appointment.vetId" ng-options="v as appointments.sharedData.getNameFromId(v) for
+													 v in appointments.sharedData.vetIds" required>
+							  <option></option>
+							</select>
+						  </span>
+						</div>
+					</div>
+				</div>
+				<div class="field">
+					<label class="label">Notes</label>
+					<div class="control">
+					  <textarea class="textarea" ng-model="appointments.appointment.note"></textarea>
+					</div>
+				</div>
+				<div class="field">
+					<div class="control">
+					  <button class="button is-primary is-large" ng-class="appointments.submitClass" ng-disabled="client.sharedData.role==='client'">Create Appointment</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div ng-if="::client.sharedData.activeTab=='Reminders' || undefined" ng-show="client.sharedData.activeTab=='Reminders'
+													" id="Reminders">
+	<reminders></reminders>
+</div>
+</fieldset>

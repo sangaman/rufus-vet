@@ -1,0 +1,81 @@
+<div class="columns">
+	<div class="column">
+		<label class="label">Find Client</label>
+		<div class="field has-addons">
+			<p class="control">
+				<input class="input" ng-keydown="findRecord.findClient($event)" ng-model="findRecord.lastName" type="text" placeholder="Last Name or Company">
+			</p>
+			<p class="control">
+				<button class="button is-info" ng-click="findRecord.findClient()" ng-class='findRecord.clientSubmitClass'>
+					Search
+				</button>
+			</p>
+		</div>
+	</div>
+	<div class="column">
+		<label class="label">Find Patient</label>
+		<div class="field has-addons">
+			<p class="control">
+				<input class="input" ng-keydown="findRecord.findPatient($event)" ng-model="findRecord.patientName" type="text
+				" placeholder="Patient Name">
+			</p>
+			<p class="control">
+				<button class="button is-info" ng-click="findRecord.findPatient()" ng-class='findRecord.patientSubmitClass'>
+					Search
+				</button>
+			</p>
+		</div>
+	</div>
+</div>
+</form>
+<table class="table is-fullwidth" ng-if="findRecord.showClients">
+	<thead>
+		<tr>
+			<th>Client Name</th>
+			<th>Email</th>
+			<th>Phone Number</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="client in findRecord.clients track by client.doc._id">
+			<td>
+				<a ng-click="findRecord.clientClick(client.doc)">
+					<span ng-bind="::client.doc.lastName"></span>
+					<span ng-bind="::
+				 ',&nbsp' + client.doc.firstName" ng-if="client.doc.firstName">
+				</a>
+			</td>
+			<td ng-bind="::client.doc.email"></td>
+			<td ng-bind="::findRecord.getPhoneNumber(client.doc) | telFilter"></td>
+		</tr>
+	</tbody>
+</table>
+<table class="table is-fullwidth" ng-if="findRecord.showPatients">
+	<thead>
+		<tr>
+			<th>Patient Name</th>
+			<th>Client</th>
+			<th>Species</th>
+			<th>Breed</th>
+			<th>Sex</th>
+			<th>Age</th>
+			<th>Color</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="patient in findRecord.patients track by patient._id">
+			<td>
+				<a ng-click="findRecord.patientClick(patient, true)" ng-bind="::patient.name"></a>
+				<span ng-if="patient.deceased"> (Deceased)</span>
+			</td>
+			<td>
+				<a ng-click="findRecord.patientClick(patient, false)" ng-bind="::findRecord.getClientNameFromId(patient.clientId)"></a>
+			</td>
+			<td ng-bind="::patient.species"></td>
+			<td ng-bind="::patient.breed"></td>
+			<td ng-bind="::(patient.sex | sexFilter)"></td>
+			<td ng-bind="::(patient.dob | ageFilter)"></td>
+			<td ng-bind="::patient.color"></td>
+		</tr>
+	</tbody>
+</table>

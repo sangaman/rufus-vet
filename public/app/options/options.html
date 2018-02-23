@@ -1,0 +1,193 @@
+<div ng-show="options.sharedData.activeTab=='Clinic'" id="Clinic" ng-controller="clinicCtrl as clinic">
+	<div class="columns">
+		<div class="column">
+		</div>
+		<div class="column">
+			<div class="columns">
+				<div class="column is-4 field">
+					<a ng-click="clinic.newVeterinarian()" class="button is-primary" ng-disabled="client.sharedData.role === 'client'">New Veterinarian</a>
+					<aside class="menu">
+						<p class="menu-label">
+							Veterinarians
+						</p>
+						<ul class="menu-list">
+							<li ng-repeat="vet in clinic.vets track by vet.id">
+								<a ng-bind="::clinic.sharedData.getNameFromId(vet.id)" ng-class="vet.id === clinic.vet._id ? 'is-active' : ''" ng-click="clinic.setVet(vet)"></a>
+							</li>
+						</ul>
+					</aside>
+				</div>
+				<div class="column is-8 box" ng-show="clinic.vet" id="procedurePanel">
+					<form ng-submit="procedures.updateProcedure()" form-on-change="procedures.formChanged()">
+						<h3 class="title is-3" ng-if="vet._id" ng-bind="clinic.sharedData.getNameFromId(vet._id)"></h3>
+						<div class="control" ng-if="!vet._id">
+							<input class="input" ng-model="clinic.vetName" ng-class="clinic.vetNameClass" type="text" placeholder="Name" required>
+						</div>
+						<label class="label">Email</label>
+						<p class="control has-icon">
+							<input class="input" ng-model="clinic.vet.email" type="email" placeholder="Email">
+							<span class="icon">
+								<i class="fa fa-envelope"></i>
+							</span>
+						</p>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div ng-show="options.sharedData.activeTab=='Procedures'" ng-controller="proceduresCtrl as procedures" id="Procedures">
+	<form class="columns" ng-submit="procedures.addProcedure()">
+		<div class="column is-4 field">
+			<label class="label">Procedure Name</label>
+			<div class="control">
+				<input class="input" ng-model="procedures.newProcedure._id" placeholder="Procedure Name" required>
+			</div>
+		</div>
+		<div class="column is-3 field">
+			<label class="label">Category</label>
+			<div class="control">
+				<span class="select">
+					<select ng-options="v for v in options.sharedData.categories" ng-model="procedures.newProcedure.category" required>
+						<option></option>
+					</select>
+				</span>
+			</div>
+		</div>
+		<div class="column is-2 field">
+			<label class="label">Price&nbsp($)</label>
+			<div class="control">
+				<input class="input" ng-model="procedures.newPrice" type="number" placeholder="Price" min="0" step="0.01" required>
+			</div>
+		</div>
+		<div class="column is-3 field">
+			<div class="control">
+				<button class="button level-item is-primary is-large" ng-class='procedures.addClass'>Add Procedure</button>
+			</div>
+		</div>
+	</form>
+	<hr/>
+	<div class="columns">
+		<div class="column is-3 field">
+			<div class="control has-icons-left">
+				<input class="input" type="text" ng-keydown="" ng-model="procedures.filterText" placeholder="Search Procedures">
+				<span class="icon is-small is-left">
+					<i class="fa fa-search"></i>
+				</span>
+			</div>
+			<aside class="menu">
+				<p class="menu-label">
+					List of Procedures
+				</p>
+				<ul class="menu-list">
+					<li ng-repeat="procedure in procedures.sharedData.procedures | filter:procedures.filterText track by procedure._id">
+						<a ng-bind="::procedure._id" ng-class="procedure._id === procedures.procedure._id ? 'is-active' : ''" ng-click="procedures.setProcedure(procedure)"></a>
+					</li>
+				</ul>
+			</aside>
+		</div>
+		<div class="column is-9 box" ng-show="procedures.procedure" id="procedurePanel">
+			<form ng-submit="procedures.updateProcedure()" form-on-change="procedures.formChanged()">
+				<div class="columns">
+					<div class="column is-8">
+						<h3 class="title is-3" ng-bind="procedures.procedure._id"></h3>
+					</div>
+					<div class="column is-4 field">
+						<label class="label">Category</label>
+						<div class="control">
+							<span class="select">
+								<select ng-options="v for v in options.sharedData.categories" ng-model="procedures.procedure.category" required>
+								</select>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="columns">
+					<div class="column field">
+						<label class="label">Price&nbsp($)</label>
+						<div class="control">
+							<input class="input" ng-model="procedures.dollarPrice" type="number" min="0" step="0.01" required>
+						</div>
+					</div>
+					<div class="column field">
+						<label class="label">Follow-up&nbspProcedure</label>
+						<div class="control">
+							<angucomplete-alt id="proceduresAutocomplete" placeholder="Search Procedures" pause="250" selected-object="procedures.procedureSelected"
+							 local-data="procedures.sharedData.procedures" search-fields="_id" title-field="_id" minlength="1" input-class="select"
+							 initial-value="procedures.procedure.followup" />
+						</div>
+					</div>
+					<div class="column">
+						<label class="label">Follow-up Time</label>
+						<div class="field has-addons">
+							<div class="control">
+								<input ng-model="procedures.followupTime" class="input" type="number" min="0">
+							</div>
+							<div class="control">
+								<span class="select">
+									<select ng-model="procedures.timeMultiplier">
+										<option value="86400000">Day(s)</option>
+										<option value="604800000">Week(s)</option>
+										<option value="2592000000">Month(s)</option>
+										<option value="31536000000">Year(s)</option>
+									</select>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--<div class="columns">
+				<div class="column">
+					<div class="control is-horizontal">
+						<div class="control-label">
+							<label class="label">Item</label>
+						</div>
+						<p class="control">
+						  <angucomplete-alt id="itemsAutocomplete" placeholder="Search Items" pause="250" selected-object="procedures.itemSelected" local-data="procedures.sharedData.items" search-fields="_id" title-field="_id" minlength="1" input-class="select"/>
+						</p>
+					</div>
+					<div class="columns">
+						<div class="column control is-horizontal is-7">
+							<div class="control-label">
+								<label class="label">Quantity</label>
+							</div>
+							<p class="control">
+							  <input class="input" ng-model="procedures.itemQuantity" type="number" min="0" placeholder="Optional">
+							</p>
+						</div>
+						<div class="column control is-5">
+							<a class="button is-info" ng-click="procedures.addItem()">Add Item</a>
+						</div>
+					</div>
+				</div>
+				<div class="column">
+					<span class="tag is-light is-large" ng-repeat="item in procedures.procedure.items track by item.itemId">
+						<span ng-bind="::procedures.sharedData.formatItemQuantity(item)"></span>
+					 	<a ng-click="procedures.deleteItem(item)" class="delete is-small"></a>
+					</span>		
+				</div>
+			</div>-->
+				<div class="field is-grouped">
+					<div class="control">
+						<button class="button is-primary is-large" ng-disabled="procedures.updateDisabled" ng-class="procedures.updateClass">Update</button>
+					</div>
+					<div class="control">
+						<a class="button is-danger is-large" ng-click="procedures.deleteProcedure()">Delete</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div ng-show="options.sharedData.activeTab=='Breeds'" ng-controller="breedsCtrl as breeds" id="Breeds">
+	<div class="columns">
+		<div class="column" ng-repeat="(species, breedsObject) in breeds.sharedData.breedsForDb">
+			<strong ng-bind="::species"></strong>
+			<ul>
+				<li ng-repeat="breed in breedsObject.breeds">
+					<span ng-bind="::breed"></span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

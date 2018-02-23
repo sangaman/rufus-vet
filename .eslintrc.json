@@ -1,0 +1,26 @@
+{
+    "extends": "airbnb-base",
+    "env": {
+        "browser": true
+    },
+    "globals": {
+        "angular": false,
+        "rufus": false,
+        "db": true,
+        "optionsDb": true,
+        "proceduresDb": true,
+        "itemsDb": true,
+        "practicesDb": false,
+        "server": false,
+        "Croppie": false,
+        "PouchDB": false
+    },
+    "rules": {
+        "no-use-before-define": 0,
+        "no-underscore-dangle": 0,
+        "no-restricted-globals": 0,
+        "no-param-reassign": 0,
+        "no-alert": 0,
+        "import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
+    }
+}

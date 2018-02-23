@@ -1,0 +1,57 @@
+<div class="columns">
+    <div class="column">
+        <h3 class="title is-3">Procedure Reminders</h3>
+        <div class="message" ng-repeat="reminder in reminders.reminders track by reminder._id">
+            <div class="message-header">
+                <p ng-bind="::(reminder._id.split('-')[3] | date:'shortDate') + ' - ' + reminders.sharedData.getNameFromId(reminder._id) + ' - ' + reminder.procedureId"></p>
+                <button ng-click="reminders.deleteReminder(reminder)" class="delete"></button>
+            </div>
+            <div ng-bind="::reminder.note" class="message-body"> </div>
+        </div>
+    </div>
+    <div class="column">
+        <h3 class="title is-3">New Reminder</h3>
+        <form ng-submit="reminders.addReminder()">
+            <div class="columns">
+                <div class="column field">
+                    <label class="label">Date</label>
+                    <div class="control">
+                        <input class="input" type="date" ng-model="reminders.date" required>
+                    </div>
+                </div>
+                <div class="column field" ng-if="!reminders.fixedPatientId">
+                    <label class="label">Patient</label>
+                    <div class="control">
+                        <span class="select">
+                            <select ng-model="reminders.patientId" ng-options="patient._id as patient.name for patient in reminders.sharedData.patients"
+                                required>
+                                <option></option>
+                            </select>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Procedure</label>
+                <div class="control">
+                    <angucomplete-alt id="proceduresReminderAutocomplete" placeholder="Search Procedures" pause="250" selected-object="reminders.procedureSelected"
+                        local-data="reminders.sharedData.procedures" search-fields="_id" title-field="_id" minlength="1" input-class="select"
+                        required/>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Notes</label>
+                <div class="field">
+                    <div class="control">
+                        <textarea class="textarea" ng-model="reminders.reminder.note"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button class="button is-primary is-large" ng-class="reminders.submitClass" ng-disabled="client.sharedData.role === 'client'">Create Reminder</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
