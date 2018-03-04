@@ -118,8 +118,8 @@
 					<h4 class="title is-4" ng-bind="::'Reminders for ' + statement.sharedData.getNameFromId(patientId)"></h4>
 					<ul>
 						<li ng-repeat="reminder in patient.reminders">
-							<span ng-bind="::(reminder.id.split('-')[3] | date:'shortDate') + ' - '"></span>
-							<strong ng-bind="::reminder.doc.procedureId"></strong>
+							<span ng-bind="::(reminder._id.split('-')[3] | date:'shortDate') + ' - '"></span>
+							<strong ng-bind="::reminder.procedureId"></strong>
 						</li>
 					</ul>
 					<br>
