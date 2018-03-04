@@ -585,7 +585,7 @@
 		<div class="column">
 			<label class="label">Balance&nbsp($)</label>
 			<p class="control">
-			  <input class="input" ng-value="billing.balance/100" disabled>
+			  <input class="input" ng-value="billing.sharedData.balance/100" disabled>
 			</p>
 		</div>
 		<div class="column">
@@ -611,7 +611,7 @@
 		<div class="column">
 			<label class="label">Amount&nbsp($)</label>
 			<p class="control">
-			  <input class="input" ng-model="billing.amount" type="number" min="0" step="0.01" max="{{billing.balance/100}}" required>
+			  <input class="input" ng-model="billing.amount" type="number" min="0" step="0.01" max="{{billing.sharedData.balance/100}}" required>
 			</p>
 		</div>
 		<div class="column">

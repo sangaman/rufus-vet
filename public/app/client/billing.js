@@ -4,13 +4,10 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
   const _this = this;
   this.sharedData = sharedData;
 
-  this.balance = 0;
+  sharedData.balance = 0;
+  sharedData.unpaidVisits = [];
   this.payment = {};
   this.payments = [];
-
-  this.visitClick = (visitScope) => {
-    visitScope.expand = true;
-  };
 
   db.find({
     selector: {
@@ -39,7 +36,7 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
   }).then((response) => {
     sharedData.unpaidVisits = $filter('orderBy')(response.docs, 'date', true);
     for (let i = 0; i < sharedData.unpaidVisits.length; i += 1) {
-      _this.balance += sharedData.unpaidVisits[i].balance;
+      sharedData.balance += sharedData.unpaidVisits[i].balance;
     }
     $scope.$apply();
   }).catch(console.error.bind(console));
@@ -51,6 +48,10 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
     } else {
       alert('Please select a payment.');
     }
+  };
+
+  this.visitClick = (visitScope) => {
+    visitScope.expand = true;
   };
 
   this.paymentTypeChanged = () => {

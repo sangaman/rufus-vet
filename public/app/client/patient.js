@@ -126,8 +126,9 @@ function PatientController($scope, $filter, sharedData, $rootScope) {
 
         if (sharedData.unpaidVisits) {
           sharedData.unpaidVisits.push(visit);
-          sharedData.unpaidVisits.balance += visit.balance;
+          sharedData.balance += visit.balance;
         }
+
         if (Object.keys(visit.items).length === 0) {
           delete visit.items;
         }

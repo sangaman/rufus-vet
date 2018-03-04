@@ -214,10 +214,10 @@ rufus.service('sharedData', function sharedData($rootScope, $http, $templateCach
     if (client._id) {
       _this.setClientTitle(client);
       if (!_this.client || client._id !== _this.client._id) {
-        _this.patientVisits = undefined;
-        _this.patient = undefined;
+        _this.patientVisits = null;
+        _this.patient = null;
         _this.balance = 0;
-        _this.unpaidVisits = undefined;
+        _this.unpaidVisits = null;
 
         db.find({
           selector: {
