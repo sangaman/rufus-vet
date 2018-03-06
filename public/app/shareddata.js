@@ -247,6 +247,7 @@ rufus.service('sharedData', function sharedData($rootScope, $http, $templateCach
       _this.title = 'New Client';
       _this.tabNames = undefined;
       _this.patients = [];
+      _this.activeTab = 'Profile';
     }
     _this.client = client;
   };
