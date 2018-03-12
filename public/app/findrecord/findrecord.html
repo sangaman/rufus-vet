@@ -40,8 +40,7 @@
 		<tr ng-repeat="client in findRecord.clients track by client.doc._id">
 			<td>
 				<a ng-click="findRecord.clientClick(client.doc)">
-					<span ng-bind="::client.doc.lastName"></span>
-					<span ng-bind="::
+					<span ng-bind="::client.doc.lastName"></span><span ng-bind="::
 				 ',&nbsp' + client.doc.firstName" ng-if="client.doc.firstName">
 				</a>
 			</td>
