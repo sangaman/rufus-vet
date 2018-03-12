@@ -50,19 +50,19 @@ function StatementController($scope, $filter, sharedData) {
     _this.loaded = true;
   });
 
-  this.remindersHandler = (results) => {
+  this.remindersHandler = function remindersHandler(results) {
     this.reminders = results.rows;
     _this.remindersFetchedCount += 1;
     _this.applyIfLoadingDone();
   };
 
-  this.patientHandler = (doc) => {
+  this.patientHandler = function patientHandler(doc) {
     this.patient = doc;
     _this.patientsFetchedCount += 1;
     _this.applyIfLoadingDone();
   };
 
-  this.visitHandler = (doc) => {
+  this.visitHandler = function vistHandler(doc) {
     this.visits.push(doc);
     _this.total += doc.total;
     _this.visitsFetchedCount += 1;
