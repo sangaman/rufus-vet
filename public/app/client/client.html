@@ -660,7 +660,7 @@
 			</div>
 			<div>
 				<ul class="control">
-					<li ng-repeat="payment in billing.payments track by payment._id">
+					<li ng-repeat="payment in billing.payments | orderBy: '_id':true track by payment._id ">
 						<label class="radio">
 							<input type="radio" ng-model="billing.selectedPayment" name="receipt" ng-value="::payment">
 							<strong ng-bind="::(payment._id.split( '-')[1] | date: 'shortDate')"></strong>&nbsp-&nbsp$<span ng-bind="::payment.amount/100
