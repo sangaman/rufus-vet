@@ -26,14 +26,14 @@
 		<div class="invoice-box" id="print-content">
 			<div class="columns is-mobile">
 				<div class="column">
-					<img ng-src="https://storage.googleapis.com/rufus-logos/{{index.sharedData.practice._id}}.png">
+					<img ng-src="https://storage.googleapis.com/rufus-logos/{{statement.sharedData.practice._id}}.png">
 				</div>
 				<div class="column has-text-right">
-					<span ng-bind="index.sharedData.practice.name"></span>
+					<span ng-bind="statement.sharedData.practice.name"></span>
 					<br>
-					<span ng-bind="index.sharedData.practice.phone | telFilter"></span>
+					<span ng-bind="statement.sharedData.practice.phone | telFilter"></span>
 					<br>
-					<span ng-bind="index.sharedData.practice.email">
+					<span ng-bind="statement.sharedData.practice.email">
 				</div>
 			</div>
 			<div class="columns">
