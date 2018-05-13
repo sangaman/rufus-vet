@@ -4,20 +4,30 @@ function StatementController($scope, $filter, sharedData) {
   const _this = this;
   this.sharedData = sharedData;
 
-  $scope.$on('showReceipt', (event, payment) => {
+  $scope.$on('showReceipt', (event, payments) => {
     _this.loaded = false;
     _this.visitsFetchedCount = 0;
     _this.patientsFetchedCount = 0;
     _this.remindersFetchedCount = 0;
     _this.patientsCount = 0;
-    _this.visitsCount = payment.visitIds.length;
     _this.total = 0;
-    _this.payment = payment;
     _this.patients = {};
-    [, _this.paymentDate] = payment._id.split('-');
-    payment.visitIds.sort();
-    for (let i = 0; i < _this.visitsCount; i += 1) {
-      const arr = payment.visitIds[i].split('-');
+    _this.payments = payments;
+
+    const visitIds = [];
+    for (let i = 0; i < payments.length; i += 1) {
+      const payment = payments[i];
+      for (let j = 0; j < payment.visitIds.length; j += 1) {
+        const visitId = payment.visitIds[j];
+        if (!visitIds.includes(visitId)) {
+          visitIds.push(visitId);
+        }
+      }
+    }
+    _this.visitsCount = visitIds.length;
+    visitIds.sort();
+    for (let j = 0; j < _this.visitsCount; j += 1) {
+      const arr = visitIds[j].split('-');
       const patientId = `p-${arr[1]}-${arr[2]}`;
 
       if (!_this.patients[patientId]) {
@@ -35,7 +45,7 @@ function StatementController($scope, $filter, sharedData) {
           .catch(console.error.bind(console));
       }
 
-      db.get(payment.visitIds[i]).then(_this.visitHandler.bind(_this.patients[patientId]))
+      db.get(visitIds[j]).then(_this.visitHandler.bind(_this.patients[patientId]))
         .catch(console.error.bind(console));
     }
   });

@@ -8,6 +8,7 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
   sharedData.unpaidVisits = [];
   this.payment = {};
   this.payments = [];
+  this.paymentSelections = {};
 
   db.find({
     selector: {
@@ -42,8 +43,16 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
   }).catch(console.error.bind(console));
 
   this.showReceipt = () => {
-    if (_this.selectedPayment) {
-      $rootScope.$broadcast('showReceipt', _this.selectedPayment);
+    const paymentSelectionKeys = Object.keys(_this.paymentSelections);
+    if (paymentSelectionKeys.length) {
+      const payments = [];
+      for (let i = 0; i < paymentSelectionKeys.length; i += 1) {
+        const paymentSelectionKey = paymentSelectionKeys[i];
+        if (_this.paymentSelections[paymentSelectionKey]) {
+          payments.push(_this.payments[paymentSelectionKey]);
+        }
+      }
+      $rootScope.$broadcast('showReceipt', payments);
       sharedData.showPrint = true;
     } else {
       alert('Please select a payment.');

@@ -661,8 +661,8 @@
 			<div>
 				<ul class="control">
 					<li ng-repeat="payment in billing.payments | orderBy: '_id':true track by payment._id ">
-						<label class="radio">
-							<input type="radio" ng-model="billing.selectedPayment" name="receipt" ng-value="::payment">
+						<label class="checkbox">
+							<input type="checkbox" ng-model="billing.paymentSelections[$index]">
 							<strong ng-bind="::(payment._id.split( '-')[1] | date: 'shortDate')"></strong>&nbsp-&nbsp$<span ng-bind="::payment.amount/100
 													"></span>&nbsp-&nbsp<span ng-bind="::payment.type"></span><span ng-if="payment.info" ng-bind=" '&nbsp#' + payment.info"></span>
 						</label>

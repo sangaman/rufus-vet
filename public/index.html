@@ -94,23 +94,27 @@
 						<td ng-bind="procedure.quantity ? procedure.quantity : 1" class="has-text-right" width="25%"></td>
 						<td ng-bind="'$' + procedure.price/100" class="has-text-right"></td>
 					</tr>
-					<tr class="total" ng-if="statement.payment">
+					<tr class="total" ng-if="statement.payments">
 						<td></td>
 						<td class="has-text-right">Subtotal</td>
 						<td class="has-text-right" ng-bind="'$' + visit.total/100"></td>
 					</tr>
 				</table>
 			</div>
-			<div class="columns is-mobile visit-block" ng-if="statement.payment">
+			<div class="columns is-mobile visit-block" ng-if="statement.payments">
 				<div class="column is-7">
 					<strong>Payment Received</strong>
 				</div>
-				<div class="column has-text-right is-3">
-					<strong ng-bind="statement.payment.type"></strong>
-					<strong ng-if="statement.payment.info" ng-bind="'&nbsp#' + statement.payment.info"></strong>
-				</div>
-				<div class="column has-text-right">
-					<strong ng-bind="'$' + statement.payment.amount/100"></strong>
+				<div class="column">
+					<div class="columns" ng-repeat="payment in statement.payments">
+						<div class="column is-8 has-text-right">
+							<strong ng-bind="payment.type"></strong>
+							<strong ng-if="payment.info" ng-bind="'&nbsp#' + payment.info"></strong>		
+						</div>
+						<div class="column is-4 has-text-right">
+							<strong ng-bind="'$' + payment.amount/100"></strong>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div ng-repeat="(patientId, patient) in statement.patients">
