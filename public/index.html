@@ -117,17 +117,15 @@
 					</div>
 				</div>
 			</div>
-			<div ng-repeat="(patientId, patient) in statement.patients">
-				<p ng-if="patient.reminders.length">
-					<h4 class="title is-4" ng-bind="::'Reminders for ' + statement.sharedData.getNameFromId(patientId)"></h4>
-					<ul>
-						<li ng-repeat="reminder in patient.reminders">
-							<span ng-bind="::(reminder.doc._id.split('-')[3] | date:'shortDate') + ' - '"></span>
-							<strong ng-bind="::reminder.doc.procedureId"></strong>
-						</li>
-					</ul>
-					<br>
-				</p>
+			<div ng-repeat="(patientId, patient) in statement.patients" ng-if="patient.reminders.length">
+				<h4 class="title is-4" ng-bind="::'Reminders for ' + statement.sharedData.getNameFromId(patientId)"></h4>
+				<ul>
+					<li ng-repeat="reminder in patient.reminders">
+						<span ng-bind="::(reminder.doc._id.split('-')[3] | date:'shortDate') + ' - '"></span>
+						<strong ng-bind="::reminder.doc.procedureId"></strong>
+					</li>
+				</ul>
+				<br>
 			</div>
 		</div>
 	</div>
