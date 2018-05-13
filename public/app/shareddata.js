@@ -181,6 +181,7 @@ rufus.service('sharedData', function sharedData($rootScope, $http, $templateCach
               console.log(err);
             }
           }).on('denied', console.error.bind(console)));
+          $rootScope.$broadcast('dbReady');
 
           proceduresDb = _this.syncAndCreateDb(`${practiceId}_procedures`);
           optionsDb = _this.syncAndCreateDb(`${practiceId}_options`);
@@ -188,7 +189,7 @@ rufus.service('sharedData', function sharedData($rootScope, $http, $templateCach
         } else if (_this.role === 'client') {
           db = new PouchDB(server + response.clientId.toLowerCase(), { skip_setup: true });
           db.get(response.clientId).then((client) => {
-            if (client) { _this.setClient(client); }
+            if (client) { _this.setClient(client, 'Profile'); }
             $location.path('/client');
             $rootScope.$apply();
           });
@@ -210,7 +211,7 @@ rufus.service('sharedData', function sharedData($rootScope, $http, $templateCach
     _this.tabNames = clientTabNames;
   };
 
-  this.setClient = (client) => {
+  this.setClient = (client, activeTab) => {
     if (client._id) {
       _this.setClientTitle(client);
       if (!_this.client || client._id !== _this.client._id) {
@@ -218,6 +219,9 @@ rufus.service('sharedData', function sharedData($rootScope, $http, $templateCach
         _this.patient = null;
         _this.balance = 0;
         _this.unpaidVisits = null;
+        if (activeTab) {
+          _this.activeTab = activeTab;
+        }
 
         db.find({
           selector: {
@@ -255,6 +259,7 @@ rufus.service('sharedData', function sharedData($rootScope, $http, $templateCach
     _this.patientVisits = [];
     _this.patientReminders = [];
     if (patient && patient._id && (!this.patient || patient._id !== _this.patient._id)) {
+      _this.activeTab = 'Patients';
       const promises = [];
       promises.push(db.allDocs({
         include_docs: true,
@@ -285,6 +290,19 @@ rufus.service('sharedData', function sharedData($rootScope, $http, $templateCach
   this.getNameFromId = (id) => {
     if (id) { return id.split('-')[1]; }
     return '';
+  };
+  this.capitalizeWords = str => str.replace(/\w*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  this.getClientNameFromId = (clientId) => {
+    const tokens = clientId.split('-');
+    if (tokens.length === 3) {
+      // this is a company
+      return _this.capitalizeWords(tokens[1]);
+    }
+    // second to last token is always first name
+    const firstName = _this.capitalizeWords(tokens[tokens.length - 2]);
+    let lastName = clientId.substring(2, clientId.length - 7);
+    lastName = _this.capitalizeWords(lastName.substring(0, lastName.lastIndexOf('-')));
+    return `${lastName}, ${firstName}`;
   };
   this.formatItemQuantity = (item) => {
     if (item.quantity > 1) {

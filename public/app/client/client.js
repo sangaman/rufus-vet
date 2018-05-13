@@ -13,8 +13,6 @@ function ClientController($scope, sharedData) {
   if (sharedData.patient) {
     this.showPatient = true;
     sharedData.activeTab = 'Patients';
-  } else {
-    sharedData.activeTab = 'Profile';
   }
 
   this.patientBack = (showNewVisit) => {

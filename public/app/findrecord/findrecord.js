@@ -28,24 +28,9 @@ function FindRecordController($scope, $location, sharedData) {
     }).catch(console.error.bind(console));
   };
 
-  this.capitalizeWords = str => str.replace(/\w*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-
   this.clientClick = (client) => {
-    sharedData.setClient(client);
+    sharedData.setClient(client, 'Profile');
     $location.path('/client');
-  };
-
-  this.getClientNameFromId = (clientId) => {
-    const tokens = clientId.split('-');
-    if (tokens.length === 3) {
-      // this is a company
-      return _this.capitalizeWords(tokens[1]);
-    }
-    // second to last token is always first name
-    const firstName = _this.capitalizeWords(tokens[tokens.length - 2]);
-    let lastName = clientId.substring(2, clientId.length - 7);
-    lastName = _this.capitalizeWords(lastName.substring(0, lastName.lastIndexOf('-')));
-    return `${lastName}, ${firstName}`;
   };
 
   this.getPhoneNumber = (client) => {

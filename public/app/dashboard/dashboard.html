@@ -1,3 +1,11 @@
 <section class="section">
- 
+    <h3 class="title is-3">Clients with unpaid balances</h3>
+    <ul>
+        <li ng-repeat="(clientId, balance) in dashboard.unpaidClients">
+            <a ng-click="dashboard.setClientId(clientId)">
+                <span ng-bind="dashboard.sharedData.getClientNameFromId(clientId)">
+            </a>
+            &nbsp-&nbsp<strong ng-bind="::'$' + balance/100"></strong>
+        </li>
+    </ul>
 </section>
