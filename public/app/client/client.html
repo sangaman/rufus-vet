@@ -582,42 +582,48 @@
 <div ng-if="::client.sharedData.activeTab=='Billing' || undefined" ng-show="client.sharedData.activeTab=='Billing'
 													" ng-controller="billingCtrl as billing" id="Billing">
 	<form class="columns level" ng-submit="billing.addPayment()">
-		<div class="column">
+		<div class="column field">
 			<label class="label">Balance&nbsp($)</label>
-			<p class="control">
+			<div class="control">
 			  <input class="input" ng-value="billing.sharedData.balance/100" disabled>
-			</p>
-		</div>
-		<div class="column">
-			<label class="label">Payment&nbspType</label>
-			<p class="control">
-			  <select class="select" ng-change="billing.paymentTypeChanged()" ng-model="billing.payment.type" required>
-				  <option></option>
-				  <option>Cash</option>
-				  <option>Check</option>
-				  <option>Credit Card</option>
-				  <option>CareCredit</option>
-			  </select>
-			</p>
-		</div>
-		<div class="column">
-			<div ng-if="billing.paymentInfoLabel">
-			<label class="label" ng-bind="billing.paymentInfoLabel"></label>
-			<p class="control">
-			  <input class="input" ng-model="billing.payment.info">
-			</p>
 			</div>
 		</div>
-		<div class="column">
-			<label class="label">Amount&nbsp($)</label>
-			<p class="control">
-			  <input class="input" ng-model="billing.amount" type="number" min="0" step="0.01" max="{{billing.sharedData.balance/100}}" required>
-			</p>
+		<div class="column field">
+			<label class="label">Payment&nbspType</label>
+			<div class="control">
+				<select class="select" ng-change="billing.paymentTypeChanged()" ng-model="billing.payment.type" required>
+					<option></option>
+					<option>Cash</option>
+					<option>Check</option>
+					<option>Credit Card</option>
+					<option>CareCredit</option>
+				</select>
+			</div>
 		</div>
-		<div class="column">
-			<p class="control">
-			  <button class="button level-item is-primary is-large" ng-class="billing.submitClass" ng-disabled="client.sharedData.role==='client'">Add Payment</button>
-			</p>
+		<div class="column field">
+			<div ng-if="billing.paymentInfoLabel">
+				<label class="label" ng-bind="billing.paymentInfoLabel"></label>
+				<div class="control">
+					<input class="input" ng-model="billing.payment.info">
+				</div>
+			</div>
+		</div>
+		<div class="column field">
+			<label class="label">Date</label>
+			<div class="control">
+				<input class="input" type="date" ng-model="billing.date" required>
+			</div>			
+		</div>
+		<div class="column field">
+			<label class="label">Amount&nbsp($)</label>
+			<div class="control">
+				<input class="input" ng-model="billing.amount" type="number" min="0" step="0.01" max="{{billing.sharedData.balance/100}}" required>
+			</div>
+		</div>
+		<div class="column field">
+			<div class="control">
+				<button class="button level-item is-primary is-large" ng-class="billing.submitClass" ng-disabled="client.sharedData.role==='client'">Add Payment</button>
+			</div>
 		</div>
 	</form>
 	<div class="tile is-parent">

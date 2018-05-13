@@ -9,6 +9,7 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
   this.payment = {};
   this.payments = [];
   this.paymentSelections = {};
+  this.date = new Date();
 
   db.find({
     selector: {
@@ -65,7 +66,7 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
 
   this.paymentTypeChanged = () => {
     if (_this.payment.type === 'Check') {
-      _this.paymentInfoLabel = 'Check\xA0Number';
+      _this.paymentInfoLabel = 'Check\xA0#';
     } else if (_this.payment.type === 'Credit Card') {
       _this.paymentInfoLabel = 'Last\xA04';
     } else {
@@ -78,7 +79,13 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
       return;
     }
     _this.submitClass = 'is-loading';
-    _this.payment._id = `y-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+    const now = new Date();
+    _this.date.setHours(now.getHours());
+    _this.date.setMinutes(now.getMinutes());
+    _this.date.setSeconds(now.getSeconds());
+    _this.date.setMilliseconds(now.getMilliseconds());
+
+    _this.payment._id = `y-${_this.date.getTime()}-${Math.random().toString(36).substring(2, 6)}`;
     _this.payment.clientId = sharedData.client._id;
     _this.payment.visitIds = [];
     _this.payment.amount = _this.amount * 100;
