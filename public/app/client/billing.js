@@ -21,6 +21,7 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
         $lt: 'y-\uffff',
       },
     },
+    sort: [{ _id: 'desc' }],
   }).then((response) => {
     _this.payments = response.docs;
     $scope.$apply();
@@ -137,7 +138,7 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
         for (let i = 0; i < response.length; i += 1) {
           unpaidVisitsToUpdate[i]._rev = response[i].rev;
           if (patientVisitIndexes[i] > -1) {
-            sharedData.visits[patientVisitIndexes[i]] = unpaidVisitsToUpdate[i];
+            sharedData.patientVisits[patientVisitIndexes[i]] = unpaidVisitsToUpdate[i];
           }
           if (unpaidVisitsToUpdate[i].balance === 0) {
             sharedData.unpaidVisits.splice(0, 1);
