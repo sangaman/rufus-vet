@@ -30,7 +30,7 @@ function ClientController($scope, sharedData) {
     _this.showPatient = true;
   };
   this.patientClick = (patient) => {
-    sharedData.patient = null;
+    sharedData.patient = undefined;
     sharedData.setPatient(patient);
     $scope.$broadcast('patientChanged', patient._id.substring(2));
     _this.showPatient = true;

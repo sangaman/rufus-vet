@@ -49,7 +49,8 @@ function PatientController($scope, $filter, sharedData, $rootScope) {
   };
   this.clearCroppie = () => {
     _this.patientPic.bind({ url: '' });
-    _this.picLoaded = false; picInput.value = null;
+    _this.picLoaded = false;
+    picInput.value = undefined;
   };
   this.changePic = () => {
     _this.clearCroppie();

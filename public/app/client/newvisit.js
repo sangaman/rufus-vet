@@ -81,9 +81,9 @@ function NewVisitController($scope) {
     _this.newProcedure.followupTime = _this.followupTime;
     _this.visit.procedures.push(_this.newProcedure);
 
-    _this.newProcedure = null;
-    _this.price = null;
-    _this.quantity = null;
+    _this.newProcedure = undefined;
+    _this.price = undefined;
+    _this.quantity = undefined;
     $scope.$broadcast('angucomplete-alt:clearInput', 'proceduresAutocomplete');
   };
 }

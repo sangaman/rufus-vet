@@ -71,7 +71,7 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
     } else if (_this.payment.type === 'Credit Card') {
       _this.paymentInfoLabel = 'Last\xA04';
     } else {
-      _this.paymentInfoLabel = null;
+      _this.paymentInfoLabel = undefined;
     }
   };
 
