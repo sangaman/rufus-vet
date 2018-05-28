@@ -91,7 +91,7 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
       _this.payment.clientId = sharedData.client._id;
       _this.payment.visitIds = [];
       _this.payment.amount = _this.amount * 100;
-      _this.balance -= _this.payment.amount;
+      sharedData.balance -= _this.payment.amount;
 
       let remainingAmount = _this.payment.amount;
       const unpaidVisitsToUpdate = [];
@@ -108,12 +108,8 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
         if (remainingAmount >= unpaidVisit.balance) {
           remainingAmount -= unpaidVisit.balance;
           unpaidVisit.balance = 0;
-          if (unpaidVisit.partialPayment) {
-            delete unpaidVisit.partialPayment;
-          }
         } else {
           unpaidVisit.balance -= remainingAmount;
-          unpaidVisit.partialPayment = remainingAmount;
           remainingAmount = 0;
           sharedData.unpaidVisits.push(unpaidVisit);
         }
@@ -144,6 +140,7 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
             sharedData.unpaidVisits.splice(0, 1);
           }
         }
+        $scope.$apply();
       }).catch(console.error.bind(console));
     }
   };

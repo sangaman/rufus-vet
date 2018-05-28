@@ -639,7 +639,7 @@
 					<a ng-click="expand=!expand" class="icon">
 					<i class="fa" ng-class="expand ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
 					</a>
-					<strong ng-bind="::(visit._id.split( '-')[3] | date: 'shortDate')"></strong> - <span ng-bind="::billing.sharedData.getNameFromId(visit._id)
+					<strong ng-bind="::(visit._id.split( '-')[3] | date: 'shortDate')"></strong> - <span ng-bind="billing.sharedData.getNameFromId(visit._id)
 													 + ' - $' + visit.balance/100"></span>
 					<div ng-if="::expand || undefined" ng-show="expand">
 						<div class="columns">
