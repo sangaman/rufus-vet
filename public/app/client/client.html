@@ -611,8 +611,9 @@
 		<div class="column field">
 			<label class="label">Date</label>
 			<div class="control">
-				<input class="input" type="date" ng-model="billing.date" required>
-			</div>			
+				<input class="input" ng-class="billing.dateClass" type="date" ng-model="billing.date" required>
+			</div>
+			<p class="help is-danger" ng-show="billing.dateClass">Date must not be before 2017</p>
 		</div>
 		<div class="column field">
 			<label class="label">Amount&nbsp($)</label>
