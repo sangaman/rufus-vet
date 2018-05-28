@@ -2,7 +2,7 @@
   "name": "rufus-vet",
   "version": "1.0.0-alpha.1",
   "description": "A veterinary practice management app that's mobile and offline friendly",
-  "main": "public/app/rufus.js",
+  "browser": "public/app/rufus.js",
   "directories": {
     "test": "test"
   },
