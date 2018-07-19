@@ -74,6 +74,11 @@ table tr.total{
 	padding-bottom: 4px;
 }
 
+.notes-block {
+	margin-top: -12px;
+	margin-bottom: 16px;
+}
+
 .patient-info {
 	margin-bottom: 4px;
 	border-style: solid;

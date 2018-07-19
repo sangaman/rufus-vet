@@ -72,7 +72,8 @@
 					</small>
 				</div>
 
-				<table class="table is-fullwidth visit-block" ng-repeat="visit in patient.visits">
+				<div ng-repeat="visit in patient.visits | orderBy: 'date':true ">
+				<table class="table is-fullwidth visit-block">
 					<thead>
 						<tr>
 							<td>
@@ -100,6 +101,15 @@
 						<td class="has-text-right" ng-bind="'$' + visit.total/100"></td>
 					</tr>
 				</table>
+				<div ng-if="statement.showNotes && visit.notes.length > 0" class="notes-block">
+					<strong>Notes</strong>
+					<ul>
+						<li ng-repeat="note in visit.notes">
+							<span ng-bind="::note.note"></span>
+						</li>
+					</ul>
+				</div>
+				</div>
 			</div>
 			<div class="columns is-mobile visit-block" ng-if="statement.payments">
 				<div class="column is-7">
@@ -121,8 +131,8 @@
 				<h4 class="title is-4" ng-bind="::'Reminders for ' + statement.sharedData.getNameFromId(patientId)"></h4>
 				<ul>
 					<li ng-repeat="reminder in patient.reminders">
-						<span ng-bind="::(reminder.doc._id.split('-')[3] | date:'shortDate') + ' - '"></span>
-						<strong ng-bind="::reminder.doc.procedureId"></strong>
+						<span ng-bind="::(reminder._id.split('-')[3] | date:'shortDate') + ' - '"></span>
+						<strong ng-bind="::reminder.procedureId"></strong>
 					</li>
 				</ul>
 				<br>

@@ -13,6 +13,7 @@ function StatementController($scope, $filter, sharedData) {
     _this.total = 0;
     _this.patients = {};
     _this.payments = payments;
+    _this.showNotes = false;
 
     const visitIds = [];
     for (let i = 0; i < payments.length; i += 1) {
@@ -58,6 +59,7 @@ function StatementController($scope, $filter, sharedData) {
       visits: sharedData.patientVisits.slice(0),
     };
     _this.loaded = true;
+    _this.showNotes = true;
   });
 
   this.remindersHandler = function remindersHandler(results) {
