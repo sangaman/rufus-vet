@@ -68,7 +68,7 @@
 				<span ng-if="patient.deceased"> (Deceased)</span>
 			</td>
 			<td>
-				<a ng-click="findRecord.patientClick(patient, false)" ng-bind="::findRecord.getClientNameFromId(patient.clientId)"></a>
+				<a ng-click="findRecord.patientClick(patient, false)" ng-bind="::findRecord.sharedData.getClientNameFromId(patient.clientId)"></a>
 			</td>
 			<td ng-bind="::patient.species"></td>
 			<td ng-bind="::patient.breed"></td>
