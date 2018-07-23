@@ -63,7 +63,10 @@ function StatementController($scope, $filter, sharedData) {
   });
 
   this.remindersHandler = function remindersHandler(results) {
-    this.reminders = results.rows;
+    this.reminders = new Array(results.rows.length);
+    for (let i = 0; i < results.rows.length; i += 1) {
+      this.reminders[i] = results.rows[i].doc;
+    }
     _this.remindersFetchedCount += 1;
     _this.applyIfLoadingDone();
   };
