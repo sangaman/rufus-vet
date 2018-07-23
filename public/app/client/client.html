@@ -618,7 +618,8 @@
 		<div class="column field">
 			<label class="label">Amount&nbsp($)</label>
 			<div class="control">
-				<input class="input" ng-model="billing.amount" type="number" min="0" step="0.01" max="{{billing.sharedData.balance/100}}" required>
+				<input class="input" ng-class="billing.amountClass" ng-model="billing.amount" type="number" min="0" step="0.01" max="{{billing.sharedData.balance/100}}" required>
+				<p class="help is-danger" ng-show="billing.amountClass">Payment amount cannot exceed current balance</p>
 			</div>
 		</div>
 		<div class="column field">

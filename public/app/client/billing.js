@@ -5,7 +5,6 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
   this.sharedData = sharedData;
 
   sharedData.balance = 0;
-  sharedData.unpaidVisits = [];
   this.payment = {};
   this.payments = [];
   this.paymentSelections = {};
@@ -78,8 +77,11 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
   this.addPayment = () => {
     if (_this.date.getFullYear() < 2017) {
       _this.dateClass = 'is-danger';
+    } else if (_this.payment.amount * 100 > sharedData.balance) {
+      _this.amountClass = 'is-danger';
     } else if (confirm(`Record a payment of $${_this.amount}? This cannot be undone.`)) {
-      _this.date4Class = undefined;
+      _this.dateClass = undefined;
+      _this.amountClass = undefined;
       _this.submitClass = 'is-loading';
       const now = new Date();
       _this.date.setHours(now.getHours());
@@ -91,7 +93,6 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
       _this.payment.clientId = sharedData.client._id;
       _this.payment.visitIds = [];
       _this.payment.amount = _this.amount * 100;
-      sharedData.balance -= _this.payment.amount;
 
       let remainingAmount = _this.payment.amount;
       const unpaidVisitsToUpdate = [];
@@ -122,6 +123,7 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
           _this.submitClass = '';
           _this.payments.unshift(_this.payment);
 
+          sharedData.balance -= _this.payment.amount;
           _this.payment = {};
           _this.amount = undefined;
         } else {
