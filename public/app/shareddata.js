@@ -47,6 +47,9 @@ rufus.service('sharedData', function sharedData($rootScope, $http, $templateCach
 
   this.syncAndCreateDb = (dbPath) => {
     PouchDB.sync(dbPath, server + dbPath).on('complete', () => {
+      if (!_this.syncs) {
+        _this.syncs = [];
+      }
       _this.syncs.push(PouchDB.sync(dbPath, server + dbPath, {
         live: true,
         retry: true,
