@@ -36,7 +36,16 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
       },
     },
   }).then((response) => {
-    sharedData.unpaidVisits = $filter('orderBy')(response.docs, 'date', true);
+    const sortByDate = (a, b) => {
+      const aDate = a._id.split('-')[3];
+      const bDate = b._id.split('-')[3];
+      if (aDate < bDate) return -1;
+      if (aDate > bDate) return 1;
+      return 0;
+    };
+
+    sharedData.unpaidVisits = response.docs;
+    sharedData.unpaidVisits.sort(sortByDate);
     for (let i = 0; i < sharedData.unpaidVisits.length; i += 1) {
       sharedData.balance += sharedData.unpaidVisits[i].balance;
     }
@@ -98,7 +107,7 @@ function BillingController($scope, $rootScope, $filter, sharedData) {
       const unpaidVisitsToUpdate = [];
       const patientVisitIndexes = [];
       while (remainingAmount > 0) {
-        const unpaidVisit = sharedData.unpaidVisits.pop();
+        const unpaidVisit = sharedData.unpaidVisits.shift();
         _this.payment.visitIds.push(unpaidVisit._id);
         let patientVisitIndex = -1;
         // check if this visit exists in our existing list of patient visits so we can update the rev
